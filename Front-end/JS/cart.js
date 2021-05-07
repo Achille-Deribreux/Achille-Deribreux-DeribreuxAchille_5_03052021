@@ -1,7 +1,7 @@
 const getCartHead = document.getElementById("cart-head-insert");
 const getCartBody = document.getElementById("cart-body-insert");
 let nbArticles = localStorage.getItem("nombreArticles");
-
+let cartCounter;
 if (nbArticles == null){
     getCartHead.innerHTML = "<p> Désolé, votre panier est vide </p>"
 }else{

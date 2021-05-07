@@ -24,8 +24,8 @@ function main(){
                 event.preventDefault() //Empeche la redirection du bouton
                 countArticles = countArticles+1; //incrémente le nb d'articles au panier
                 localStorage.setItem("nombreArticles",countArticles);
-                getCart.innerHTML = (countArticles); //Ajoute le nb d'articles au panier près de la petite icone panier du header
                 localStorage.setItem(countArticles, item.getAttribute('data-id')); //Met le numéro d'article et data-id en storage
+                getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
                 ;})
             })
         })
