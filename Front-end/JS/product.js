@@ -35,7 +35,7 @@ function displayProduit(produit){
         <div class="col-12 col-lg-6">
             <h4>${produit.name}</h4>
             <h5><strong>${priceWithSpace(produit.price)}€</strong></h5>
-            <a class="btn btn-primary">add to cart</a>
+            <a class="btn btn-primary"><i class="fas fa-cart-plus"></i> Ajouter au panier</a>
         </div>
     </div>
 
@@ -51,7 +51,7 @@ function displayProduit(produit){
 }
 function priceWithSpace(price){
     price = price/100;
-    return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
 };
 
 
