@@ -3,6 +3,8 @@ const getCartBody = document.getElementById("cart-body-insert");
 const getCartFoot = document.getElementById("cart-foot-insert");
 let nbArticles = localStorage.getItem("nombreArticles");
 let cartCounter;
+let prixtot = 0;
+
 if (nbArticles == null){
     getCartHead.innerHTML = "<p> Désolé, votre panier est vide </p>"
 }else{
@@ -15,7 +17,7 @@ if (nbArticles == null){
       <th class="text-center" scope="col">Prix</th>
       <th class="text-center" scope="col">Supprimer</th>
     </tr>`
-    
+
   function main(){
     //connexion à l'API
     return fetch("http://localhost:3000/api/cameras")
@@ -36,7 +38,7 @@ function affichePanier(cameras) {
         for (camera of cameras){
             if (dataID == camera._id){
                 addToCart(camera);
-                totalPrice(camera);
+                totalPrice(camera,prixtot);
             }
         }
     };
@@ -60,16 +62,15 @@ function priceWithSpace(price){
     price = price/100;
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
 };
-
-function totalPrice(camera){
-    
+function totalPrice(camera, prixtot){
+ prixtot= prixtot+((camera.price/100)*parseInt(localStorage.getItem(camera._id)))
+ console.log(prixtot);
 }
 
 getCartFoot.innerHTML = `
 <tr class="mt-3">
-  <td scope="col" colspan="2"></td>
-  <td scope="col" class="text-center" colspan="2"><strong>Total :<strong/></td>
-  <td scope="col" class="text-center" colspan="2"> <strong>2199€<strong/></td>
+  <td scope="col" class="text-center" colspan="3"><strong>Total :<strong/></td>
+  <td scope="col" class="text-center" colspan="3"> <strong>${prixtot}<strong/></td>
 </tr>`
 
 main();

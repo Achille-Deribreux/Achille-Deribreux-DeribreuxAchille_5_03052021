@@ -35,6 +35,11 @@ function displayProduit(produit){
         <div class="col-12 col-lg-6">
             <h4>${produit.name}</h4>
             <h5><strong>${priceWithSpace(produit.price)}€</strong></h5>
+
+            <select id="select">
+                ${getLensesOptions(produit)}
+            </select>
+
             <a class="btn btn-primary"><i class="fas fa-cart-plus"></i> Ajouter au panier</a>
         </div>
     </div>
@@ -48,6 +53,9 @@ function displayProduit(produit){
 
 </div>
     `
+    produit.lenses.forEach(item => {
+        //console.log(item);
+    });
 }
 function priceWithSpace(price){
     price = price/100;
@@ -55,13 +63,14 @@ function priceWithSpace(price){
 };
 
 
-
-
-
-
-
-
-
+function getLensesOptions(produit) {
+    let result = '';
+    for (let i = 0, size = produit.lenses.length; i < size; i++) {
+        console.log(produit.lenses[i]);
+      result += ` <option>${produit.lenses[i]}</option>`;
+    }
+    return result;
+  }
 
 main();
 
