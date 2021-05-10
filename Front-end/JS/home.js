@@ -20,12 +20,22 @@ function main(){
             }
             //querySelector reprenant chaque bouton ajouter au panier et forEach ajoutant un eventListener sur chacun
             getProductListDiv.querySelectorAll('.add-to-cart').forEach((item) => {
+                localStorage.setItem(item.getAttribute('data-id'),0);
+                //
                 item.addEventListener('click', (event) => {
                 event.preventDefault() //Empeche la redirection du bouton
                 countArticles = countArticles+1; //incrémente le nb d'articles au panier
                 localStorage.setItem("nombreArticles",countArticles);
-                localStorage.setItem(countArticles, item.getAttribute('data-id')); //Met le numéro d'article et data-id en storage
                 getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
+                //
+                console.log(item.getAttribute('data-id'));
+                if (localStorage.getItem(item.getAttribute('data-id')) == 0){
+                    localStorage.setItem(countArticles, item.getAttribute('data-id'));
+                    increaseQuantity(item);
+                }else{
+                    increaseQuantity(item);
+                }
+                
                 ;})
             })
         })
@@ -33,6 +43,13 @@ function main(){
         .catch(function(err){
             alert(error)
         })
+}
+
+function increaseQuantity (item){
+    let countQuantity = localStorage.getItem(item.getAttribute('data-id'));
+    countQuantity = parseInt(countQuantity);
+    countQuantity = countQuantity+1;
+    localStorage.setItem(item.getAttribute('data-id'),countQuantity);
 }
 
 //fonction affichant les appareils 1 par 1 sur la page d'accueil
