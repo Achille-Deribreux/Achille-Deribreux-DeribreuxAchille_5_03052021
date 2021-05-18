@@ -27,15 +27,7 @@ function main(){
                 countArticles = countArticles+1; //incrémente le nb d'articles au panier
                 localStorage.setItem("nombreArticles",countArticles);
                 getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
-                //
-                console.log(item.getAttribute('data-id'));
-                if (localStorage.getItem(item.getAttribute('data-id')) == 0){
-                    localStorage.setItem(countArticles, item.getAttribute('data-id'));
-                    increaseQuantity(item);
-                }else{
-                    increaseQuantity(item);
-                }
-                
+                increaseQuantity(item);
                 ;})
             })
         })

@@ -2,18 +2,13 @@ const productId = (new URL(document.location)).searchParams.get('id');
 const productUrl= "http://localhost:3000/api/cameras".concat('/', productId);
 //console.log(productUrl);
 
-async function main(){
-    const produit = await getProduit()
-    displayProduit(produit)
-}
-
-function getProduit() {
+function main(){
     return fetch(productUrl)
         .then(function(response){
             return response.json()
         })
         .then(function(produit){
-            return produit
+            displayProduit(produit);
             //console.log(produit);
         }
         )
@@ -67,7 +62,7 @@ function getLensesOptions(produit) {
     let result = '';
     for (let i = 0, size = produit.lenses.length; i < size; i++) {
         console.log(produit.lenses[i]);
-      result += ` <option>${produit.lenses[i]}</option>`;
+      result += ` <option data-id="${i}">${produit.lenses[i]}</option>`;
     }
     return result;
   }
@@ -75,7 +70,7 @@ function getLensesOptions(produit) {
 main();
 
 
-
+//Activer le bouton Add to cart, faire la mise en forme et faire en sorte de passer l'indice du i avec pour pouvoir récupérer le bon objectif dans le panier
 
 
 
