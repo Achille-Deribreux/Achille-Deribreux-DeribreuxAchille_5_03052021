@@ -88,7 +88,7 @@ function affichePanier(cameras) {
 function addToCart(camera) {
     getCartBody.innerHTML +=`
     <tr>
-        <td class="text-center" scope="col">${localStorage.getItem(camera._id)}</td>
+        <td class="text-center" scope="col"><input id="qtyInput" type="number" class="text-center" value="${localStorage.getItem(camera._id)}"/></td>
         <td class="text-center" scope="col"><img width=70px src="${camera.imageUrl}"/></td>
         <td class="text-center" scope="col">${camera.name}</td>
         <td class="text-center" scope="col">${camera.lenses[0]}</td>
@@ -96,6 +96,10 @@ function addToCart(camera) {
         <td class="text-center delete" id="${camera._id}" scope="col"><p class="text-center"><i class="fas fa-trash"></i></p></td>
     </tr>
     `
+    let quantityInput = document.getElementById('qtyInput');
+    quantityInput.addEventListener('input', (event)=>{
+        localStorage.setItem(camera._id,quantityInput.value)
+    });
 }
 
 // Fonction changeant la forme du prix (49900 => 499€)
