@@ -21,6 +21,7 @@ function main(){
             //querySelector reprenant chaque bouton ajouter au panier et forEach ajoutant un eventListener sur chacun
             getProductListDiv.querySelectorAll('.add-to-cart').forEach((item) => {
                 localStorage.setItem(item.getAttribute('data-id'),0);
+                localStorage.setItem("nombreArticles",0);
                 //
                 item.addEventListener('click', (event) => {
                 event.preventDefault() //Empeche la redirection du bouton
