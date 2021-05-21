@@ -51,13 +51,15 @@ function displayCameras(camera) {
                 <div class="col-md-4 col-sm-12 mb-4">      
                 <div class="card">
                 <a href="product.html?id=${camera._id}">
-                    <img class="card-img-top" src="${camera.imageUrl}" alt="Card image cap">
+                    <img class="card-img-top img" src="${camera.imageUrl}" alt="Card image cap">
                 </a>
                     <div class="card-body">
                         <h5 class="card-title">${camera.name}</h5>
                         <p class="card-text">${camera.description}</p>
                         <p class="card-text text-center"><strong>${priceWithSpace(camera.price)}€</strong></p>
-                        <a href="#" class="btn btn-secondary add-to-cart" data-id="${camera._id}" id="${camera._id}"><i class="fas fa-cart-plus"></i> <br> Ajouter au panier</a>
+                        <div class="text-center">
+                            <a href="#" class="btn btn-secondary add-to-cart" data-id="${camera._id}" id="${camera._id}"><i class="fas fa-cart-plus"></i> <br> Ajouter au panier</a>
+                        </div>
                     </div>
                 </div>
             </div>

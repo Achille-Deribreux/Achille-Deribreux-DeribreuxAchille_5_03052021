@@ -8,3 +8,18 @@ body{
 .hidden{
   display: none;
 }
+.img{
+  width: 25rem;
+  height:11rem;
+}
+#carouselExampleIndicators img{
+  object-fit: cover;
+  max-height: 700px;
+}
+#logo{
+  filter: invert(1);
+}
+#footer-logo{
+  filter: invert(1);
+  max-height: 60px;
+}
