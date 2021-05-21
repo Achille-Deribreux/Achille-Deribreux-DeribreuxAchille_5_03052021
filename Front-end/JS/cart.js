@@ -89,6 +89,7 @@ function calculatePrice(){
         prixTotalPanier += prixPanier[i];
     }
     prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
+    localStorage.setItem("prixTotal", prixTotalPanier);
     document.getElementById('totalPrice').innerHTML =prixTotalPanier + "€";
 }
 
@@ -286,18 +287,10 @@ let body = {contact, products}
     })
    .then(response => response.json())
     .then((response) => {
-        localStorage.clear();
-        localStorage.setItem("orderConfirmation", response);
-        window.location="./index.html"
+        localStorage.setItem("orderConfirmation", JSON.stringify(response));
+        window.location="./confirmation.html"
      })
       .catch(function(error) {
         alert('Il y a eu un problème avec l\'opération fetch: ' + error.message);
       });
- }
-
- function testfunction(){
-     if(localStorage.setItem('rep')!=null){
-        let order = JSON.parse(localStorage.getItem('rep'));
-        console.log(order);
-     }
  }
