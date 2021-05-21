@@ -7,19 +7,14 @@ const getForm = document.getElementById("cartForm");
 const getFormFirstName = document.getElementById("inputFirstName");
 const getFormName = document.getElementById("inputName");
 const getFormEmail = document.getElementById("inputEmail");
-const getFormPhone = document.getElementById("inputPhone");
 const getFormAdress1 = document.getElementById("inputAddress");
-const getFormAdress2 = document.getElementById("inputAddress2");
 const getFormCity = document.getElementById("inputCity");
-const getFormZip = document.getElementById("inputZip");
-const getFormCountry = document.getElementById("inputCountry");
 const getFormCgv = document.getElementById("inputCgv");
 const getSubmitButton = document.getElementById("submitButton");
 
 //regex
 const textRegex = new RegExp(/^[a-zA-Z\s,'-]*$/);
 const mailRegex = new RegExp(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([;.](([a-zA-Z0-9_\-\.]+)@{[a-zA-Z0-9_\-\.]+0\.([a-zA-Z]{2,5}){1,25})+)*$/);
-const zipRegex = new RegExp(/^\d{5}$|^\d{5}-\d{4}$/);
 
 const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
 let nbArticles = localStorage.getItem("nombreArticles");
@@ -107,15 +102,9 @@ function addToCart(camera) {
         <td class="text-center delete" id="${camera._id}" scope="col"><p class="text-center"><i class="fas fa-trash"></i></p></td>
     </tr>
     `
-    /*
-    let quantityInput = document.getElementById('qtyInput');
-    quantityInput.addEventListener('input', (event)=>{
-        localStorage.setItem(camera._id,quantityInput.value)
-    });*/
     listen();
 }
 
-//TEST
 function listen(){
     getCartBody.querySelectorAll('.qtyInput').forEach((item) => {
         item.addEventListener('change', (event)=>{
@@ -142,7 +131,6 @@ function listenInputs(){
             getFormFirstName.classList.add("is-invalid")
         }
     })  
-
     getFormName.addEventListener('input', (event) => {
         if (getFormName.value != "" && textRegex.test(getFormName.value) === true){
             getFormName.classList.remove("is-invalid")
@@ -152,7 +140,6 @@ function listenInputs(){
             getFormName.classList.add("is-invalid")
         }
     }) 
-
     getFormEmail.addEventListener('input', (event) => {
         if (getFormEmail.value != "" && mailRegex.test(getFormEmail.value) === true){
             getFormEmail.classList.remove("is-invalid")
@@ -162,17 +149,6 @@ function listenInputs(){
             getFormEmail.classList.add("is-invalid")
         }
     })
-
-    getFormPhone.addEventListener('input', (event) => {
-        if (getFormPhone.value != ""){
-            getFormPhone.classList.remove("is-invalid")
-            getFormPhone.classList.add("is-valid")
-        }else{
-            getFormPhone.classList.remove("is-valid")
-            getFormPhone.classList.add("is-invalid")
-        }
-    })
-
     getFormAdress1.addEventListener('input', (event) => {
         if (getFormAdress1.value != ""){
             getFormAdress1.classList.remove("is-invalid")
@@ -182,13 +158,6 @@ function listenInputs(){
             getFormAdress1.classList.add("is-invalid")
         }
     })
-    getFormAdress2.addEventListener('input', (event) => {
-        if (getFormAdress2.value != ""){
-            getFormAdress2.classList.add("is-valid")
-        }else{
-            getFormAdress2.classList.remove("is-valid")
-        }
-    })
     getFormCity.addEventListener('input', (event) => {
         if (getFormCity.value != "" && textRegex.test(getFormCity.value) === true){
             getFormCity.classList.remove("is-invalid")
@@ -196,24 +165,6 @@ function listenInputs(){
         }else{
             getFormCity.classList.remove("is-valid")
             getFormCity.classList.add("is-invalid")
-        }
-    })
-    getFormZip.addEventListener('input', (event) => {
-        if (getFormZip.value != "" && zipRegex.test(getFormZip.value)===true){
-            getFormZip.classList.remove("is-invalid")
-            getFormZip.classList.add("is-valid")
-        }else{
-            getFormZip.classList.remove("is-valid")
-            getFormZip.classList.add("is-invalid")
-        }
-    })
-    getFormCountry.addEventListener('input', (event) => {
-        if (getFormCountry.value !="" && textRegex.test(getFormCountry.value) === true){
-            getFormCountry.classList.remove("is-invalid")
-            getFormCountry.classList.add("is-valid")
-        }else{
-            getFormCountry.classList.remove("is-valid")
-            getFormCountry.classList.add("is-invalid")
         }
     })
     getSubmitButton.addEventListener('click', (event) => {
@@ -235,20 +186,12 @@ function submitForm(checkConditions){
         alert("Veuillez entrer une adresse email");
     }else if(mailRegex.test(getFormEmail.value ) != true){//Check si email valide
         alert("Veuillez entrer une adresse mail correcte");
-    }else if(getFormPhone.value == ""){//Check si N° téléphone vide
-        alert("Veuillez entrer un N° de téléphone");
     }else if(getFormAdress1.value == ""){//Check si Adresse vide
         alert("Veuillez entrer une adresse");
     }else if(getFormCity.value == ""){//Check si ville vide
         alert("Veuillez entrer une ville");
     }else if(textRegex.test(getFormCity.value) != true){//Check si ville valide
         alert("Veuillez entrer une ville correcte");
-    }else if(getFormZip.value == ""){//Check si code postal téléphone vide
-        alert("Veuillez entrer un code postal");
-    }else if(getFormCountry.value == ""){//Check si Pays vide
-        alert("Veuillez entrer un Pays");
-    }else if(textRegex.test(getFormCountry.value) != true){//Check si Pays valide
-        alert("Veuillez entrer un Pays correct");
     }else if(!getFormCgv.checked){//Check si les cgv sont acceptées
         alert("Veuillez accepter les cgv")
     }else{
@@ -260,9 +203,6 @@ function submitForm(checkConditions){
  function sendToApi(){
     //DEBUTS TESTS
     let postRequestUrl = 'http://localhost:3000/api/cameras/order';
-// DATA TO BE SENT
-// 1 --- OBJET CONTACT CONTENANT INFORMATIONS DU FORMULAIRE, AVEC LA NOMENCLATURE SUIVANTE (ATTENTION A BIEN RESPECTER CETTE NOMENCLATURE)
-
 let contact = 
 {
     firstName: getFormFirstName.value,
@@ -271,9 +211,6 @@ let contact =
     city : getFormCity.value,
     email: getFormEmail.value,
 }
-// 2 --- ARRAY (TABLEAU) PRODUCTS CONTENANT LES IDENTIFIANTS DE CHAQUE PRODUIT QUE VOUS AVEZ DANS LE PANIER
-//let products = ["5be9c4c71c9d440000a730e9"];
-// 3 --- ENVOYER L'OBJET CONTACT && L'ARRAY PRODUCTS DANS LE BODY DE LA REQUETE POST
 let body = {contact, products}
 
     //FIN TESTS
