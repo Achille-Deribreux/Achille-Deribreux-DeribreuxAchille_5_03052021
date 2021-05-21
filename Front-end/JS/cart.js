@@ -26,6 +26,9 @@ let nbArticles = localStorage.getItem("nombreArticles");
 let prixPanier = [];
 let prixTotalPanier=0;
 
+//SetPanier
+let products=[];
+
 //Création du panier si panier
 if (nbArticles == 0){
     getCartHead.innerHTML = "<p> Désolé, votre panier est vide </p>"
@@ -78,17 +81,24 @@ function affichePanier(cameras) {
                 prixPanier.push((camera.price/100)*localStorage.getItem(camera._id));
             }
         }
-        for (i in prixPanier){
-            prixTotalPanier += prixPanier[i];
-        }
-        prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
-        document.getElementById('totalPrice').innerHTML =prixTotalPanier + "€";     
+        calculatePrice()     
+}
+
+function calculatePrice(){
+    for (i in prixPanier){
+        prixTotalPanier += prixPanier[i];
+    }
+    prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
+    document.getElementById('totalPrice').innerHTML =prixTotalPanier + "€";
 }
 
 function addToCart(camera) {
+    for (let i = 0; i < localStorage.getItem(camera._id);i++){
+        products.push(camera._id);
+    }
     getCartBody.innerHTML +=`
     <tr>
-        <td class="text-center" scope="col"><input id="qtyInput" type="number" class="text-center" value="${localStorage.getItem(camera._id)}"/></td>
+        <td class="text-center" scope="col"><input type="number" data-id="${camera._id}" class="text-center qtyInput" value="${localStorage.getItem(camera._id)}"/></td>
         <td class="text-center" scope="col"><img width=70px src="${camera.imageUrl}"/></td>
         <td class="text-center" scope="col">${camera.name}</td>
         <td class="text-center" scope="col">${camera.lenses[0]}</td>
@@ -96,12 +106,23 @@ function addToCart(camera) {
         <td class="text-center delete" id="${camera._id}" scope="col"><p class="text-center"><i class="fas fa-trash"></i></p></td>
     </tr>
     `
+    /*
     let quantityInput = document.getElementById('qtyInput');
     quantityInput.addEventListener('input', (event)=>{
         localStorage.setItem(camera._id,quantityInput.value)
-    });
+    });*/
+    listen();
 }
 
+//TEST
+function listen(){
+    getCartBody.querySelectorAll('.qtyInput').forEach((item) => {
+        item.addEventListener('change', (event)=>{
+           localStorage.setItem(item.getAttribute('data-id'),item.value);
+           location.reload();
+        });
+    });
+}
 // Fonction changeant la forme du prix (49900 => 499€)
 function priceWithSpace(price){
     price = price/100;
@@ -230,28 +251,53 @@ function submitForm(checkConditions){
     }else if(!getFormCgv.checked){//Check si les cgv sont acceptées
         alert("Veuillez accepter les cgv")
     }else{
-        let contactData={
-            firstName : getFormFirstName.value,
-            lastName : getFormName.value,
-            email :getFormEmail.value,
-            phone : getFormPhone.value,
-            adress : getFormAdress1.value + getFormAdress2.value,
-            city : getFormCity.value,
-            zip :getFormZip.value,
-            country : getFormCountry.value
-        };
-        //Envoyer l'objet à l'api ?? 
-        fetch("http://localhost:3000/api/cameras", {
-            method: 'POST',
-            headers: { 
-            'Accept': 'application/json', 
-            'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(contactData)
-        });
+        sendToApi();
     }
 }
 
+ //Envoyer l'objet à l'api ?? 
+ function sendToApi(){
+    //DEBUTS TESTS
+    let postRequestUrl = 'http://localhost:3000/api/cameras/order';
+// DATA TO BE SENT
+// 1 --- OBJET CONTACT CONTENANT INFORMATIONS DU FORMULAIRE, AVEC LA NOMENCLATURE SUIVANTE (ATTENTION A BIEN RESPECTER CETTE NOMENCLATURE)
 
+let contact = 
+{
+    firstName: getFormFirstName.value,
+    lastName: getFormName.value,
+    address: getFormAdress1.value,
+    city : getFormCity.value,
+    email: getFormEmail.value,
+}
+// 2 --- ARRAY (TABLEAU) PRODUCTS CONTENANT LES IDENTIFIANTS DE CHAQUE PRODUIT QUE VOUS AVEZ DANS LE PANIER
+//let products = ["5be9c4c71c9d440000a730e9"];
+// 3 --- ENVOYER L'OBJET CONTACT && L'ARRAY PRODUCTS DANS LE BODY DE LA REQUETE POST
+let body = {contact, products}
 
+    //FIN TESTS
+    fetch("http://localhost:3000/api/cameras/order", {
+        method: 'POST',
+        headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(body)
+    })
+   .then(response => response.json())
+    .then((response) => {
+        localStorage.clear();
+        localStorage.setItem("orderConfirmation", response);
+        window.location="./index.html"
+     })
+      .catch(function(error) {
+        alert('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+      });
+ }
 
+ function testfunction(){
+     if(localStorage.setItem('rep')!=null){
+        let order = JSON.parse(localStorage.getItem('rep'));
+        console.log(order);
+     }
+ }
