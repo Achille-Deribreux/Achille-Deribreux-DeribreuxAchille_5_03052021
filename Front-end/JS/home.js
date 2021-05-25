@@ -20,7 +20,7 @@ function main(){
             }
             //querySelector reprenant chaque bouton ajouter au panier et forEach ajoutant un eventListener sur chacun
             getProductListDiv.querySelectorAll('.add-to-cart').forEach((item) => {
-                localStorage.setItem(item.getAttribute('data-id'),0);
+                localStorage.setItem(item.getAttribute('id'),0);
                 localStorage.setItem("nombreArticles",0);
                 //
                 item.addEventListener('click', (event) => {
@@ -38,11 +38,11 @@ function main(){
         })
 }
 
+//Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
 function increaseQuantity (item){
-    let countQuantity = localStorage.getItem(item.getAttribute('data-id'));
-    countQuantity = parseInt(countQuantity);
-    countQuantity = countQuantity+1;
-    localStorage.setItem(item.getAttribute('data-id'),countQuantity);
+    let countQuantity = parseInt(localStorage.getItem(item.getAttribute('id')));
+    countQuantity += 1;
+    localStorage.setItem(item.getAttribute('id'),countQuantity);
 }
 
 //fonction affichant les appareils 1 par 1 sur la page d'accueil
@@ -51,14 +51,14 @@ function displayCameras(camera) {
                 <div class="col-md-4 col-sm-12 mb-4">      
                 <div class="card">
                 <a href="product.html?id=${camera._id}">
-                    <img class="card-img-top img" src="${camera.imageUrl}" alt="Card image cap">
+                    <img class="card-img-top imgC" src="${camera.imageUrl}" alt="Card image cap">
                 </a>
                     <div class="card-body">
                         <h5 class="card-title">${camera.name}</h5>
                         <p class="card-text">${camera.description}</p>
                         <p class="card-text text-center"><strong>${priceWithSpace(camera.price)}€</strong></p>
                         <div class="text-center">
-                            <a href="#" class="btn btn-secondary add-to-cart" data-id="${camera._id}" id="${camera._id}"><i class="fas fa-cart-plus"></i> <br> Ajouter au panier</a>
+                            <a href="#" class="btn btn-secondary add-to-cart" id="${camera._id}"><i class="fas fa-cart-plus"></i> <br> Ajouter au panier</a>
                         </div>
                     </div>
                 </div>

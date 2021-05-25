@@ -1,7 +1,10 @@
+//récupération des ID HTML
+const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
 const getCartHead = document.getElementById("cart-head-insert");
 const getCartBody = document.getElementById("cart-body-insert");
 const getCartFoot = document.getElementById("cart-foot-insert");
-const getFormSection = document.getElementById("insert-form")
+const getFormSection = document.getElementById("insert-form");
+
 // Récupération Formulaire
 const getForm = document.getElementById("cartForm");
 const getFormFirstName = document.getElementById("inputFirstName");
@@ -12,19 +15,19 @@ const getFormCity = document.getElementById("inputCity");
 const getFormCgv = document.getElementById("inputCgv");
 const getSubmitButton = document.getElementById("submitButton");
 
-//regex
+//Construction des Regex
 const textRegex = new RegExp(/^[a-zA-Z\s,'-]*$/);
 const mailRegex = new RegExp(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([;.](([a-zA-Z0-9_\-\.]+)@{[a-zA-Z0-9_\-\.]+0\.([a-zA-Z]{2,5}){1,25})+)*$/);
 
-const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
+//Déclaration des variables
 let nbArticles = localStorage.getItem("nombreArticles");
 let prixPanier = [];
 let prixTotalPanier=0;
-
-//SetPanier
 let products=[];
 
-//Création du panier si panier
+//___________________________________________________________________________________________________________________//
+
+//Création du panier si au moins un article a été ajouté
 if (nbArticles == 0){
     getCartHead.innerHTML = "<p> Désolé, votre panier est vide </p>"
 }else{
@@ -47,7 +50,9 @@ if (nbArticles == 0){
     main();
 }
 
-// Déclaration des fonctions
+//_____________________FONCTIONS_________________________________________//
+
+//Fonction main qui se connecte à l'api et apelle la fonction qui affiche le panier, écoute également pour les articles suprimés
 function main(){
     //connexion à l'API
     return fetch("http://localhost:3000/api/cameras")
@@ -55,20 +60,21 @@ function main(){
             return response.json()
         })
         .then(function(cameras){
-            affichePanier(cameras);
+            affichePanier(cameras); // Appel de la fonction qui va afficher les articles dans le panier
             getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
-            getCartBody.querySelectorAll('.delete').forEach((item) => {
-                item.addEventListener('click', (event) => {
-                    localStorage.setItem(item.getAttribute('id'),0);
-                    location.reload();
+            getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
+                item.addEventListener('click', (event) => {  // Ecoute le "click" sur chaque icone poubelle
+                    localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
+                    location.reload(); //Réactualise la page pour que les fonctions d'affichage panier soient ré-appelées et que la suppression se fasse 
                 })
             });
         })
         .catch(function(err){
-            alert(err)
+            alert(err) // Affiche l'erreur dans une alert si erreur 
         })
 }
 
+//Fonction triant les articles qui doivent être affichés dans le panier ou non, appelle également la fonction calculant le prix
 function affichePanier(cameras) {
         for (camera of cameras){
             if (parseInt(localStorage.getItem(camera._id)) > 0){
@@ -79,18 +85,20 @@ function affichePanier(cameras) {
         calculatePrice()     
 }
 
+//fonction calculant le prix total du panier et l'affichant dans l'ID souhaité, sous les articles
 function calculatePrice(){
     for (i in prixPanier){
         prixTotalPanier += prixPanier[i];
     }
-    prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
-    localStorage.setItem("prixTotal", prixTotalPanier);
-    document.getElementById('totalPrice').innerHTML =prixTotalPanier + "€";
+    prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 "); //Change l'affichage du prix
+    localStorage.setItem("prixTotal", prixTotalPanier); // Stock le prix total dans le localStorage 
+    document.getElementById('totalPrice').innerHTML = prixTotalPanier + "€"; // Affiche le prix total dans la page
 }
 
+//Construit le tableau products et crée l'article dans le panier
 function addToCart(camera) {
     for (let i = 0; i < localStorage.getItem(camera._id);i++){
-        products.push(camera._id);
+        products.push(camera._id); 
     }
     getCartBody.innerHTML +=`
     <tr>
@@ -105,6 +113,7 @@ function addToCart(camera) {
     listen();
 }
 
+//Construit le tableau products et crée l'article dans le panier
 function listen(){
     getCartBody.querySelectorAll('.qtyInput').forEach((item) => {
         item.addEventListener('change', (event)=>{
@@ -113,13 +122,14 @@ function listen(){
         });
     });
 }
+
 // Fonction changeant la forme du prix (49900 => 499€)
 function priceWithSpace(price){
     price = price/100;
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
 };
 
-// Fonctions formulaire
+// Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
 function listenInputs(){
     getForm.classList.remove("hidden");
     getFormFirstName.addEventListener('input', (event) => {
@@ -167,41 +177,10 @@ function listenInputs(){
             getFormCity.classList.add("is-invalid")
         }
     })
-    getSubmitButton.addEventListener('click', (event) => {
-        let checkConditions = true;
-        submitForm(checkConditions);
-    })
 }
 
-function submitForm(checkConditions){
-    if(getFormFirstName.value == ""){// Check si prénom vide
-        alert("Veuillez entrer un prénom");
-    }else if(textRegex.test(getFormFirstName.value) != true){// Check si prénom valide
-        alert("Veuillez entrer un prénom correct");
-    }else if(getFormName.value == ""){//Check si nom vide
-        alert("Veuillez entrer un nom");
-    }else if(textRegex.test(getFormName.value) != true){//Check si nom valide
-        alert("Veuillez entrer un nom correct");
-    }else if(getFormEmail.value == ""){//Check si email vide
-        alert("Veuillez entrer une adresse email");
-    }else if(mailRegex.test(getFormEmail.value ) != true){//Check si email valide
-        alert("Veuillez entrer une adresse mail correcte");
-    }else if(getFormAdress1.value == ""){//Check si Adresse vide
-        alert("Veuillez entrer une adresse");
-    }else if(getFormCity.value == ""){//Check si ville vide
-        alert("Veuillez entrer une ville");
-    }else if(textRegex.test(getFormCity.value) != true){//Check si ville valide
-        alert("Veuillez entrer une ville correcte");
-    }else if(!getFormCgv.checked){//Check si les cgv sont acceptées
-        alert("Veuillez accepter les cgv")
-    }else{
-        sendToApi();
-    }
-}
-
- //Envoyer l'objet à l'api ?? 
+//Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
  function sendToApi(){
-    //DEBUTS TESTS
     let postRequestUrl = 'http://localhost:3000/api/cameras/order';
 let contact = 
 {
@@ -213,7 +192,6 @@ let contact =
 }
 let body = {contact, products}
 
-    //FIN TESTS
     fetch("http://localhost:3000/api/cameras/order", {
         method: 'POST',
         headers: { 

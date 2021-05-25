@@ -1,8 +1,8 @@
 const productId = (new URL(document.location)).searchParams.get('id');
 const productUrl= "http://localhost:3000/api/cameras".concat('/', productId);
 const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
-//console.log(productUrl);
 
+//Se connecte à l'api et appelle displayProduit()
 function main(){
     return fetch(productUrl)
         .then(function(response){
@@ -17,6 +17,7 @@ function main(){
         })
 }
 
+//Se connecte à l'api et appelle displayProduit()
 function displayProduit(produit){
     document.getElementById("insert-js").innerHTML += 
     `
@@ -74,18 +75,22 @@ function displayProduit(produit){
     
         });
 }
+
+//Se connecte à l'api et appelle displayProduit()
 function increaseQuantity (item){
     let countQuantity = localStorage.getItem(item);
     countQuantity = parseInt(countQuantity);
     countQuantity = countQuantity+1;
     localStorage.setItem(item,countQuantity);
 }
+
+//Change la forme du prix (49900 => 499€)
 function priceWithSpace(price){
     price = price/100;
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
 };
 
-
+//boucle sur l'objet lenses, afin de retourner les différents objectifs que chaque appareil photo peut avoir
 function getLensesOptions(produit) {
     let result = '';
     for (let i = 0, size = produit.lenses.length; i < size; i++) {
@@ -95,51 +100,3 @@ function getLensesOptions(produit) {
   }
 
 main();
-
-
-//Activer le bouton Add to cart, faire la mise en forme et faire en sorte de passer l'indice du i avec pour pouvoir récupérer le bon objectif dans le panier
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*let getProductSection = document.getElementById("insert-js");
-let productId = (new URL(document.location)).searchParams.get('id');
-let productUrl= "http://localhost:3000/api/cameras".concat('/', productId);
-console.log(productUrl);
-
-const fetchProduct = async() => {
-    products = await fetch(productUrl).then(res=>res.json());
-};
-
-const showProductsOnHomePage = async() => {
-    await fetchProduct();  
-    getProductSection.innerHTML = (
-        products
-            .map(product => (
-                
-                `   
-                <p>${product.name}</p>
-                `
-        )).join('')
-    );
-};
-
-showProductsOnHomePage();*/
