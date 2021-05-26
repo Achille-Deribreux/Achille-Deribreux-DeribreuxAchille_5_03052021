@@ -97,10 +97,11 @@ function calculatePrice(){
 
 //Construit le tableau products et crée l'article dans le panier
 function addToCart(camera) {
-    for (let i = 0; i < localStorage.getItem(camera._id);i++){
+    for (let i = 0; i < localStorage.getItem(camera._id);i++){ //Envoie l'id des produits dans un tableau qui sera transmis à l'api
         products.push(camera._id); 
     }
-    getCartBody.innerHTML +=`
+    //Ajoute les éléments dans le panier en HTML/Bootstrap
+    getCartBody.innerHTML +=` 
     <tr>
         <td class="text-center" scope="col"><input type="number" data-id="${camera._id}" class="text-center qtyInput" value="${localStorage.getItem(camera._id)}"/></td>
         <td class="text-center" scope="col"><img width=70px src="${camera.imageUrl}"/></td>
@@ -113,7 +114,7 @@ function addToCart(camera) {
     listen();
 }
 
-//Construit le tableau products et crée l'article dans le panier
+// Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
 function listen(){
     getCartBody.querySelectorAll('.qtyInput').forEach((item) => {
         item.addEventListener('change', (event)=>{
@@ -129,7 +130,7 @@ function priceWithSpace(price){
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
 };
 
-// Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
+// Fonction écoutant le formulaire et ajoutant une mise en forme sur celui-ci, selon la donnée entrée (rouge mauvais, vert bon)
 function listenInputs(){
     getForm.classList.remove("hidden");
     getFormFirstName.addEventListener('input', (event) => {
@@ -179,7 +180,7 @@ function listenInputs(){
     })
 }
 
-//Fonction permettant l'affichage du formulaire et la mise en forme des celulles dynamiquement, selon l'entrée de l'utilisateur
+//Fonction envoyant les données vers l'API et stockant la réponse dans le localStorage
  function sendToApi(){
     let postRequestUrl = 'http://localhost:3000/api/cameras/order';
 let contact = 
