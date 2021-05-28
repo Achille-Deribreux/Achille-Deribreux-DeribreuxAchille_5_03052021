@@ -52,15 +52,25 @@
       <section>
         <table class="table col-12">
           <thead id="cart-head-insert">
-
+            <tr>
+              <th class="text-center" scope="col">Quantité</th>
+              <th class="text-center" scope="col">Photo</th>
+              <th class="text-center" scope="col">Nom</th>
+              <th class="text-center" scope="col">Objectif</th>
+              <th class="text-center" scope="col">Prix</th>
+              <th class="text-center" scope="col">Supprimer</th>
+            </tr>
           </thead>
 
           <tbody id="cart-body-insert">
 
           </tbody>
 
-          <tfoot id="cart-foot-insert">
-
+          <tfoot id="cart-foot-insert" class="hidden">
+            <tr class="mt-3">
+              <td scope="col" class="text-center" colspan="3"><strong>Total :<strong/></td>
+              <td scope="col" class="text-center" colspan="3"> <strong id="totalPrice"><strong/></td>
+              </tr>
           </tfoot>
 
         </table>

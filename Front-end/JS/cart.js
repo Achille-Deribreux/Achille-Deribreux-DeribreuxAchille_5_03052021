@@ -29,23 +29,8 @@ let products=[];
 
 //Création du panier si au moins un article a été ajouté
 if (nbArticles == 0){
-    getCartHead.innerHTML = "<p> Désolé, votre panier est vide </p>"
+    getCartHead.innerHTML = "<p class='text-center m-3 font-weight-bold'> Désolé, votre panier est vide </p>"
 }else{
-    getCartHead.innerHTML = `
-    <tr>
-      <th class="text-center" scope="col">Quantité</th>
-      <th class="text-center" scope="col">Photo</th>
-      <th class="text-center" scope="col">Nom</th>
-      <th class="text-center" scope="col">Objectif</th>
-      <th class="text-center" scope="col">Prix</th>
-      <th class="text-center" scope="col">Supprimer</th>
-    </tr>`
-
-    getCartFoot.innerHTML = `
-    <tr class="mt-3">
-    <td scope="col" class="text-center" colspan="3"><strong>Total :<strong/></td>
-    <td scope="col" class="text-center" colspan="3"> <strong id="totalPrice"><strong/></td>
-    </tr>`
     listenInputs();
     main();
 }
@@ -72,7 +57,7 @@ function main(){
                     localStorage.setItem("nombreArticles",nombreArticleFinal);
                     //FIN
                     localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
-                    location.reload(); //Réactualise la page pour que les fonctions d'affichage panier soient ré-appelées et que la suppression se fasse 
+                    main(); //Rappelle la fonction main pour "actualiser" la page et ré afficher les bons éléments
                 })
             });
         })
@@ -100,12 +85,12 @@ function calculatePrice(){
         prixTotalPanier += prixPanier[i];
     }
     prixTotalPanier = prixTotalPanier.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 "); //Change l'affichage du prix
-    localStorage.setItem("prixTotal", prixTotalPanier); // Stock le prix total dans le localStorage 
     document.getElementById('totalPrice').innerHTML = prixTotalPanier + "€"; // Affiche le prix total dans la page
 }
 
 //Construit le tableau products et crée l'article dans le panier
 function addToCart(camera) {
+    products = []
     for (let i = 0; i < localStorage.getItem(camera._id);i++){ //Envoie l'id des produits dans un tableau qui sera transmis à l'api
         products.push(camera._id); 
     }
@@ -146,6 +131,7 @@ function priceWithSpace(price){
 // Fonction écoutant le formulaire et ajoutant une mise en forme sur celui-ci, selon la donnée entrée (rouge mauvais, vert bon)
 function listenInputs(){
     getForm.classList.remove("hidden");
+    getCartFoot.classList.remove("hidden");
     getFormFirstName.addEventListener('input', (event) => {
         if (getFormFirstName.value != "" && textRegex.test(getFormFirstName.value) === true){
             getFormFirstName.classList.remove("is-invalid")
@@ -194,17 +180,16 @@ function listenInputs(){
 }
 
 //Fonction envoyant les données vers l'API et stockant la réponse dans le localStorage
- function sendToApi(){
-    let postRequestUrl = 'http://localhost:3000/api/cameras/order';
-let contact = 
-{
-    firstName: getFormFirstName.value,
-    lastName: getFormName.value,
-    address: getFormAdress1.value,
-    city : getFormCity.value,
-    email: getFormEmail.value,
-}
-let body = {contact, products}
+function sendToApi(){
+    let contact = 
+    {
+        firstName: getFormFirstName.value,
+        lastName: getFormName.value,
+        address: getFormAdress1.value,
+        city : getFormCity.value,
+        email: getFormEmail.value,
+    }
+    let body = {contact, products}
 
     fetch("http://localhost:3000/api/cameras/order", {
         method: 'POST',
