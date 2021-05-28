@@ -28,12 +28,14 @@ let products=[];
 //___________________________________________________________________________________________________________________//
 
 //Création du panier si au moins un article a été ajouté
+
 if (nbArticles == 0){
     getCartHead.innerHTML = "<p class='text-center m-3 font-weight-bold'> Désolé, votre panier est vide </p>"
 }else{
     listenInputs();
     main();
 }
+
 
 //_____________________FONCTIONS_________________________________________//
 
@@ -45,17 +47,20 @@ function main(){
             return response.json()
         })
         .then(function(cameras){
+            if(parseInt(localStorage.getItem("nombreArticles")) > 0){
+                getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
+            }
+            else{
+                getCart.innerHTML =''
+            }
             getCartBody.innerHTML ='';
             affichePanier(cameras); // Appel de la fonction qui va afficher les articles dans le panier
-            getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
             getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
                 item.addEventListener('click', (event) => {  // Ecoute le "click" sur chaque icone poubelle
-                    //Nb article total
                     nombreArticleInitial = parseInt(localStorage.getItem("nombreArticles"));
                     nombreItemInitial = parseInt(localStorage.getItem(item.getAttribute('id')));
                     nombreArticleFinal = nombreArticleInitial - nombreItemInitial;
                     localStorage.setItem("nombreArticles",nombreArticleFinal);
-                    //FIN
                     localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
                     main(); //Rappelle la fonction main pour "actualiser" la page et ré afficher les bons éléments
                 })
@@ -68,7 +73,8 @@ function main(){
 
 //Fonction triant les articles qui doivent être affichés dans le panier ou non, appelle également la fonction calculant le prix
 function affichePanier(cameras) {
-    prixPanier = [];
+    prixPanier = []
+    products = []
         for (camera of cameras){
             if (parseInt(localStorage.getItem(camera._id)) > 0){
                 addToCart(camera);
@@ -90,7 +96,6 @@ function calculatePrice(){
 
 //Construit le tableau products et crée l'article dans le panier
 function addToCart(camera) {
-    products = []
     for (let i = 0; i < localStorage.getItem(camera._id);i++){ //Envoie l'id des produits dans un tableau qui sera transmis à l'api
         products.push(camera._id); 
     }

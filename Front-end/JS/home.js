@@ -3,8 +3,8 @@
 // Initialisation 
 const getProductListDiv = document.getElementById("product-list"); //Récupère la div dans laquelle les produits vont s'afficher
 const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
-localStorage.clear(); // remet le localstorage à 0
-var  countArticles = 0; // Initialise le nombre d'articles dans le panier
+//localStorage.clear(); // remet le localstorage à 0
+
 
 // Se connecte à l'API, affiche les appareils et ajoute un eventListener sur les boutons ajouter au panier
 function main(){
@@ -18,14 +18,20 @@ function main(){
             for (camera of cameras){
                 displayCameras(camera);
             }
+            if(parseInt(localStorage.getItem("nombreArticles")) > 0){
+                getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
+            }
             //querySelector reprenant chaque bouton ajouter au panier et forEach ajoutant un eventListener sur chacun
             getProductListDiv.querySelectorAll('.add-to-cart').forEach((item) => {
-                localStorage.setItem(item.getAttribute('id'),0);
-                localStorage.setItem("nombreArticles",0);
-                //
+                if(!localStorage.getItem(item.getAttribute('id'))){
+                    localStorage.setItem(item.getAttribute('id'),0);
+                }
+                if(!localStorage.getItem("nombreArticles")){
+                    localStorage.setItem("nombreArticles",0);
+                }
                 item.addEventListener('click', (event) => {
                 event.preventDefault() //Empeche la redirection du bouton
-                countArticles = countArticles+1; //incrémente le nb d'articles au panier
+                countArticles = parseInt(localStorage.getItem("nombreArticles"))+1; //incrémente le nb d'articles au panier
                 localStorage.setItem("nombreArticles",countArticles);
                 getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
                 increaseQuantity(item);
