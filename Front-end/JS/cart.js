@@ -64,6 +64,12 @@ function main(){
             getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
             getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
                 item.addEventListener('click', (event) => {  // Ecoute le "click" sur chaque icone poubelle
+                    //Nb article total
+                    nombreArticleInitial = parseInt(localStorage.getItem("nombreArticles"));
+                    nombreItemInitial = parseInt(localStorage.getItem(item.getAttribute('id')));
+                    nombreArticleFinal = nombreArticleInitial - nombreItemInitial;
+                    localStorage.setItem("nombreArticles",nombreArticleFinal);
+                    //FIN
                     localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
                     location.reload(); //Réactualise la page pour que les fonctions d'affichage panier soient ré-appelées et que la suppression se fasse 
                 })

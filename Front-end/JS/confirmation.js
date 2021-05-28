@@ -11,5 +11,5 @@ getOrderNumberInsert.innerHTML = (confirmationObject.orderId)
 getPriceInsert.innerHTML = (totalPrice)
 getAddress.innerHTML=(confirmationObject.contact.address+" "+confirmationObject.contact.city)
 getEmailInsert.innerHTML=(confirmationObject.contact.email)
-
+console.log(confirmationObject);
 localStorage.clear();

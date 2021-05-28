@@ -10,6 +10,8 @@ function main(){
         })
         .then(function(produit){
             displayProduit(produit);
+            let setCountArticles = parseInt(localStorage.getItem("nombreArticles")); 
+            getCart.innerHTML = setCountArticles; //Ajoute le nb d'articles au panier près de la petite icone panier du header
         }
         )
         .catch(function(err){
