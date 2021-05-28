@@ -60,6 +60,7 @@ function main(){
             return response.json()
         })
         .then(function(cameras){
+            getCartBody.innerHTML ='';
             affichePanier(cameras); // Appel de la fonction qui va afficher les articles dans le panier
             getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
             getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
@@ -82,6 +83,7 @@ function main(){
 
 //Fonction triant les articles qui doivent être affichés dans le panier ou non, appelle également la fonction calculant le prix
 function affichePanier(cameras) {
+    prixPanier = [];
         for (camera of cameras){
             if (parseInt(localStorage.getItem(camera._id)) > 0){
                 addToCart(camera);
@@ -93,6 +95,7 @@ function affichePanier(cameras) {
 
 //fonction calculant le prix total du panier et l'affichant dans l'ID souhaité, sous les articles
 function calculatePrice(){
+    prixTotalPanier = 0;
     for (i in prixPanier){
         prixTotalPanier += prixPanier[i];
     }
@@ -124,8 +127,12 @@ function addToCart(camera) {
 function listen(){
     getCartBody.querySelectorAll('.qtyInput').forEach((item) => {
         item.addEventListener('change', (event)=>{
-           localStorage.setItem(item.getAttribute('data-id'),item.value);
-           location.reload();
+            nombreItemInitial = parseInt(localStorage.getItem(item.getAttribute('data-id')));
+            nombreArticleInitial = parseInt(localStorage.getItem("nombreArticles"));
+            nombreArticleFinal = nombreArticleInitial + parseInt(item.value) - parseInt(nombreItemInitial);
+            localStorage.setItem("nombreArticles",nombreArticleFinal);
+            localStorage.setItem(item.getAttribute('data-id'),item.value);
+            main()
         });
     });
 }
