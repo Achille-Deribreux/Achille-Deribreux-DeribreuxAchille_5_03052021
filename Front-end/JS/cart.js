@@ -47,32 +47,41 @@ function main(){
             return response.json()
         })
         .then(function(cameras){
+            localStorage.setItem("objet",JSON.stringify(cameras))
             if(parseInt(localStorage.getItem("nombreArticles")) > 0){
                 getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
             }
             else{
                 getCart.innerHTML =''
             }
-            getCartBody.innerHTML ='';
             affichePanier(cameras); // Appel de la fonction qui va afficher les articles dans le panier
-            getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
-                item.addEventListener('click', (event) => {  // Ecoute le "click" sur chaque icone poubelle
-                    nombreArticleInitial = parseInt(localStorage.getItem("nombreArticles"));
-                    nombreItemInitial = parseInt(localStorage.getItem(item.getAttribute('id')));
-                    nombreArticleFinal = nombreArticleInitial - nombreItemInitial;
-                    localStorage.setItem("nombreArticles",nombreArticleFinal);
-                    localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
-                    main(); //Rappelle la fonction main pour "actualiser" la page et ré afficher les bons éléments
-                })
-            });
+            listenDelete()
         })
         .catch(function(err){
             alert(err) // Affiche l'erreur dans une alert si erreur 
         })
 }
+function countArticles(item){
+    nombreArticleInitial = parseInt(localStorage.getItem("nombreArticles"));
+    nombreItemInitial = parseInt(localStorage.getItem(item.getAttribute('id')));
+    nombreArticleFinal = nombreArticleInitial - nombreItemInitial;
+    localStorage.setItem("nombreArticles",nombreArticleFinal);
+    getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
+}
+function listenDelete (){
+    getCartBody.querySelectorAll('.delete').forEach((item) => { //Ajoute l'écoute sur chaque icone .delete
+        item.addEventListener('click', (event) => {  // Ecoute le "click" sur chaque icone poubelle
+            countArticles(item)
+            localStorage.setItem(item.getAttribute('id'),0); //remet la quantité du produit sur 0 dans le localStorage
+            affichePanier(JSON.parse(localStorage.getItem("objet")))
+            listenDelete()
+        })
+    });
+}
 
 //Fonction triant les articles qui doivent être affichés dans le panier ou non, appelle également la fonction calculant le prix
 function affichePanier(cameras) {
+    getCartBody.innerHTML ='';
     prixPanier = []
     products = []
         for (camera of cameras){
@@ -122,7 +131,9 @@ function listen(){
             nombreArticleFinal = nombreArticleInitial + parseInt(item.value) - parseInt(nombreItemInitial);
             localStorage.setItem("nombreArticles",nombreArticleFinal);
             localStorage.setItem(item.getAttribute('data-id'),item.value);
-            main()
+            getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
+            affichePanier(JSON.parse(localStorage.getItem("objet")))
+            listenDelete()
         });
     });
 }
