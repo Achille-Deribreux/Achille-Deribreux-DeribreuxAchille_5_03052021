@@ -36,7 +36,6 @@ if (nbArticles == 0){
     main();
 }
 
-
 //_____________________FONCTIONS_________________________________________//
 
 //Fonction main qui se connecte à l'api et apelle la fonction qui affiche le panier, écoute également pour les articles suprimés

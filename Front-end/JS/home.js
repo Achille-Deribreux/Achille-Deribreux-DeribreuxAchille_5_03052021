@@ -3,7 +3,7 @@
 // Initialisation 
 const getProductListDiv = document.getElementById("product-list"); //Récupère la div dans laquelle les produits vont s'afficher
 const getCart = document.getElementById("number-to-insert"); // Récupère le span ou le nombre d'articles compris dans le panier va s'afficher 
-localStorage.clear(); // remet le localstorage à 0
+//localStorage.clear(); // remet le localstorage à 0
 
 
 // Se connecte à l'API, affiche les appareils et ajoute un eventListener sur les boutons ajouter au panier
