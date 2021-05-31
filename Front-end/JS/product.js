@@ -13,11 +13,10 @@ function main(){
             if(parseInt(localStorage.getItem("nombreArticles")) > 0){
                 getCart.innerHTML = localStorage.getItem("nombreArticles"); //Ajoute le nb d'articles au panier près de la petite icone panier du header
             }
-            getCart.innerHTML = setCountArticles; //Ajoute le nb d'articles au panier près de la petite icone panier du header
         }
         )
         .catch(function(err){
-            alert(error)
+            alert(err)
         })
 }
 
@@ -80,7 +79,6 @@ function displayProduit(produit){
         });
 }
 
-//Se connecte à l'api et appelle displayProduit()
 function increaseQuantity (item){
     let countQuantity = localStorage.getItem(item);
     countQuantity = parseInt(countQuantity);
